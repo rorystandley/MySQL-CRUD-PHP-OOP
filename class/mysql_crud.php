@@ -91,18 +91,21 @@ class Database{
 	}
 	
 	// Function to SELECT from the database
-    public function select($table, $rows = '*', $join = null, $where = null, $order = null){
-    	// Create query from the variables passed to the function
-    	$q = 'SELECT '.$rows.' FROM '.$table;
+    	public function select($table, $rows = '*', $join = null, $where = null, $order = null, $limit = null){
+    		// Create query from the variables passed to the function
+    		$q = 'SELECT '.$rows.' FROM '.$table;
 		if($join != null){
 			$q .= ' JOIN '.$join;
 		}
 		if($where != null){
-        	$q .= ' WHERE '.$where;
+        		$q .= ' WHERE '.$where;
+			}
+        	if($order != null){
+            		$q .= ' ORDER BY '.$order;
 		}
-        if($order != null){
-            $q .= ' ORDER BY '.$order;
-		}
+        	if($limit != null){
+            		$q .= ' LIMIT '.$limit;
+        	}
 		// Check to see if the table exists
         if($this->tableExists($table)){
         	// The table exists, run the query
