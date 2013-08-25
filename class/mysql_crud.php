@@ -144,7 +144,7 @@ class Database{
     public function insert($table,$params=array()){
     	// Check to see if the table exists
     	 if($this->tableExists($table)){
-    	 	$sql='INSERT INTO '.$table.' ('.implode(',',array_keys($params)).') VALUES ("' . implode('", "', $params) . '")';
+    	 	$sql='INSERT INTO `'.$table.'` (`'.implode('`, `',array_keys($params)).'`) VALUES (\'' . implode('\', \'', $params) . '\')';
             // Make the query to insert to the database
             if($ins = @mysql_query($sql)){
             	array_push($this->result,mysql_insert_id());
