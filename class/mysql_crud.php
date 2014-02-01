@@ -208,6 +208,24 @@ class Database{
             return false; // The table does not exist
         }
     }
+    
+    /*function to fill select tags*/
+     public function fill_select_tag($table, $valor_id, $valor_name){   
+
+        if($this->tableExists($table)){
+            $result = mysql_query("select * from $tabela");
+            //count number of records 
+            while($row=mysql_fetch_assoc($result)){
+                
+                $obj .= '<option value="'.$row[$valor_id].'">'.$row[$valor_name].'</option>';
+
+            }
+            return $obj;
+        }else{
+            return false; // Table does not exist
+        }
+            
+    }
 	
 	// Private function to check if table exists for use with queries
 	private function tableExists($table){
