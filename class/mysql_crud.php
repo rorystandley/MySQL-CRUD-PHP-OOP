@@ -27,18 +27,11 @@ class Database{
 	// Function to make connection to database
 	public function connect(){
 		if(!$this->con){
-			$myconn = @mysql_connect($this->db_host,$this->db_user,$this->db_pass);  // mysql_connect() with variables defined at the start of Database class
-            if($myconn){
-            	$seldb = @mysql_select_db($this->db_name,$myconn); // Credentials have been pass through mysql_connect() now select the database
-                if($seldb){
-                	$this->con = true;
-                    return true;  // Connection has been made return TRUE
-                }else{
-                	array_push($this->result,mysql_error()); 
-                    return false;  // Problem selecting database return FALSE
-                }  
+			$myconn = mysqli_connect($this->db_host,$this->db_user,$this->db_pass,$this->db_name);  // mysql_connect() with variables defined at the start of Database class
+            if($myconn){// Credentials have been pass through mysql_connect() now select the database
+                return true;
             }else{
-            	array_push($this->result,mysql_error());
+            	array_push($this->result,mysqli_error());
                 return false; // Problem connecting return FALSE
             }  
         }else{  
@@ -51,7 +44,7 @@ class Database{
     	// If there is a connection to the database
     	if($this->con){
     		// We have found a connection, try to close it
-    		if(@mysql_close()){
+    		if(mysqli_close()){
     			// We have successfully closed the connection, set the connection variable to false
     			$this->con = false;
 				// Return true tjat we have closed the connection
@@ -64,14 +57,14 @@ class Database{
     }
 	
 	public function sql($sql){
-		$query = @mysql_query($sql);
+		$query = mysqli_query($sql);
         $this->myQuery = $sql; // Pass back the SQL
 		if($query){
 			// If the query returns >= 1 assign the number of rows to numResults
 			$this->numResults = mysql_num_rows($query);
 			// Loop through the query results by the number of rows returned
 			for($i = 0; $i < $this->numResults; $i++){
-				$r = mysql_fetch_array($query);
+				$r = mysqli_fetch_array($query);
                	$key = array_keys($r);
                	for($x = 0; $x < count($key); $x++){
                		// Sanitizes keys so only alphavalues are allowed
@@ -86,7 +79,7 @@ class Database{
 			}
 			return true; // Query was successful
 		}else{
-			array_push($this->result,mysql_error());
+			array_push($this->result,mysqli_error());
 			return false; // No rows where returned
 		}
 	}
@@ -111,13 +104,13 @@ class Database{
 		// Check to see if the table exists
         if($this->tableExists($table)){
         	// The table exists, run the query
-        	$query = @mysql_query($q);
+        	$query = mysqli_query($q);
 			if($query){
 				// If the query returns >= 1 assign the number of rows to numResults
 				$this->numResults = mysql_num_rows($query);
 				// Loop through the query results by the number of rows returned
 				for($i = 0; $i < $this->numResults; $i++){
-					$r = mysql_fetch_array($query);
+					$r = mysqli_fetch_array($query);
                 	$key = array_keys($r);
                 	for($x = 0; $x < count($key); $x++){
                 		// Sanitizes keys so only alphavalues are allowed
@@ -132,7 +125,7 @@ class Database{
 				}
 				return true; // Query was successful
 			}else{
-				array_push($this->result,mysql_error());
+				array_push($this->result,mysqli_error());
 				return false; // No rows where returned
 			}
       	}else{
@@ -147,11 +140,11 @@ class Database{
     	 	$sql='INSERT INTO `'.$table.'` (`'.implode('`, `',array_keys($params)).'`) VALUES ("' . implode('", "', $params) . '")';
             $this->myQuery = $sql; // Pass back the SQL
             // Make the query to insert to the database
-            if($ins = @mysql_query($sql)){
-            	array_push($this->result,mysql_insert_id());
+            if($ins = mysqli_query($sql)){
+            	array_push($this->result,mysqli_insert_id());
                 return true; // The data has been inserted
             }else{
-            	array_push($this->result,mysql_error());
+            	array_push($this->result,mysqli_error());
                 return false; // The data has not been inserted
             }
         }else{
@@ -170,12 +163,12 @@ class Database{
                 $delete = 'DELETE FROM '.$table.' WHERE '.$where; // Create query to delete rows
             }
             // Submit query to database
-            if($del = @mysql_query($delete)){
-            	array_push($this->result,mysql_affected_rows());
+            if($del = mysqli_query($delete)){
+            	array_push($this->result,mysqli_affected_rows());
                 $this->myQuery = $delete; // Pass back the SQL
                 return true; // The query exectued correctly
             }else{
-            	array_push($this->result,mysql_error());
+            	array_push($this->result,mysqli_error());
                	return false; // The query did not execute correctly
             }
         }else{
@@ -197,11 +190,11 @@ class Database{
 			$sql='UPDATE '.$table.' SET '.implode(',',$args).' WHERE '.$where;
 			// Make query to database
             $this->myQuery = $sql; // Pass back the SQL
-            if($query = @mysql_query($sql)){
-            	array_push($this->result,mysql_affected_rows());
+            if($query = mysqli_query($sql)){
+            	array_push($this->result,mysqli_affected_rows());
             	return true; // Update has been successful
             }else{
-            	array_push($this->result,mysql_error());
+            	array_push($this->result,mysqli_error());
                 return false; // Update has not been successful
             }
         }else{
@@ -211,7 +204,7 @@ class Database{
 	
 	// Private function to check if table exists for use with queries
 	private function tableExists($table){
-		$tablesInDb = @mysql_query('SHOW TABLES FROM '.$this->db_name.' LIKE "'.$table.'"');
+		$tablesInDb = mysqli_query('SHOW TABLES FROM '.$this->db_name.' LIKE "'.$table.'"');
         if($tablesInDb){
         	if(mysql_num_rows($tablesInDb)==1){
                 return true; // The table exists
@@ -245,6 +238,7 @@ class Database{
 
     // Escape your string
     public function escapeString($data){
-        return mysql_real_escape_string($data);
+        return mysqli_real_escape_string($data);
     }
 } 
+
