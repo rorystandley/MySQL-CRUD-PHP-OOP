@@ -3,7 +3,7 @@
 A simple PHP Class for using with MySQL create, read, update and delete functions. Using OOP this class can easily be added to to enhance existing functions or create more.
 
 mysql-crud-php-oop is being sponsored by the following tool; please help to support us by taking a look and signing up to a free trial
-<!--<a href="https://tracking.gitads.io/?repo=mysql-crud-php-oop"> <img src="https://images.gitads.io/mysql-crud-php-oop" alt="GitAds"/> </a>-->
+<a href="https://tracking.gitads.io/?repo=mysql-crud-php-oop"> <img src="https://images.gitads.io/mysql-crud-php-oop" alt="GitAds"/> </a>
 
 **Using The Class**
 --
